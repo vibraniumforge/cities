@@ -6,20 +6,22 @@ class CityCard extends React.Component {
     return (
       <div className="citycard">
         <p>
-          <span>#{this.props.rank}</span>
+          <span>#</span>
+          <span>{this.props.rank}</span>
           <br />
           <span>{this.props.city},</span>
           <br />
           <span>{this.props.state}</span>
           <br />
-          <span>{this.props.latitude},</span> <span>
-            {this.props.longitude}
-          </span>
+          <span>{this.props.latitude},</span>
+          <br />
+          <span>{this.props.longitude}</span>
           <br />
           <span>{this.props.population}</span>
           <br />
           <span>{this.props.growth}</span>
         </p>
+        <button onClick={this.toggleModal}>More</button>
       </div>
     );
   }

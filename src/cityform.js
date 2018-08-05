@@ -9,7 +9,7 @@ class CityForm extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const formData = this.convertPropsToFormData(nextProps);
     this.setState({ formData: formData });
   }
@@ -38,7 +38,7 @@ class CityForm extends React.Component {
         value: initializedCity.state
       },
       population: {
-        value: initializedCity.population
+        value: initializedCity.population.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
       },
       growth_from_2000_to_2013: {
         value: initializedCity.growth_from_2000_to_2013
@@ -56,7 +56,7 @@ class CityForm extends React.Component {
   render() {
     return (
       <div>
-        <form>
+        <form className="theForm">
           <label>Rank:</label>
           <input
             type="text"
@@ -95,7 +95,7 @@ class CityForm extends React.Component {
             id="latitude"
             value={
               this.state.formData.longitude.value
-                ? parseFloat(this.state.formData.latitude.value).toPrecision(8)
+                ? this.state.formData.latitude.value.toPrecision(8)
                 : ""
             }
             disabled
@@ -107,7 +107,7 @@ class CityForm extends React.Component {
             id="longitude"
             value={
               this.state.formData.longitude.value
-                ? parseFloat(this.state.formData.longitude.value).toPrecision(8)
+                ? this.state.formData.longitude.value.toPrecision(8)
                 : ""
             }
             disabled

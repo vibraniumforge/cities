@@ -1,13 +1,13 @@
 .citycard {
-  background-color: powderblue;
+  background-color: navy;
   text-align: center;
   list-style-type: none;
   width: 50px;
-  border: 5px solid blue;
+  border: 5px solid red;
   padding: 10px;
   margin: 10px;
-  color: black;
-  width: 250px;
+  color: white;
+  width: 200px;
   align-content: center;
   display: inline-block;
   font-weight: bold;

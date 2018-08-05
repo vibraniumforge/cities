@@ -5,21 +5,28 @@ class CitySort extends React.Component {
     super(props);
 
     this.state = {
-      value: "populationRank"
+      radioValue: "rank"
     };
+    this.onChange = this.onChange.bind(this);
+  }
 
+  onChange(e) {
+    console.log(e);
+    console.log(e.target.value);
+    this.setState({ radioValue: e.target.value });
+    console.log(this.state.radioValue);
   }
 
   render() {
     return (
       <div>
-        <form>
+        <form className="theForm">
           <label>
             Sort by:
             <br />
             <input
               type="radio"
-              value="populationRank"
+              value="rank"
               name="sortBy"
               onChange={this.onChange}
             />

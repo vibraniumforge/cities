@@ -1,4 +1,5 @@
 import React from "react";
+import CityModal from "./citymodal.js";
 import "./citycard.css";
 
 class CityCard extends React.Component {
@@ -20,8 +21,9 @@ class CityCard extends React.Component {
           <span>{this.props.population}</span>
           <br />
           <span>{this.props.growth}</span>
+          <br />
+          <button>Modal</button>
         </p>
-        <button onClick={this.toggleModal}>More</button>
       </div>
     );
   }

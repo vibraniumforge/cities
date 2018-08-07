@@ -11,7 +11,6 @@ class CityModal extends React.Component {
         <p>Longitude: {this.props.longitude}</p>
         <p>Population: {this.props.population}</p>
         <p>Growth Rate: {this.props.growth}</p>
-        <button onClick={this.toggleModal}>Dismiss</button>
       </div>
     );
   }

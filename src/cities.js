@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import CityModal from "./citymodal";
 import CityForm from "./cityform.js";
 import CitySort from "./citysort.js";
 import CityCard from "./citycard.js";
@@ -53,7 +52,8 @@ class Cities extends React.Component {
     this.sort(e);
   }
 
-  toggleModal() {
+  toggleModal(e) {
+    e.preventDefault();
     this.setState({ showModal: !this.state.showModal });
   }
 
@@ -175,7 +175,7 @@ class Cities extends React.Component {
             growth={
               city.growth_from_2000_to_2013
                 ? city.growth_from_2000_to_2013
-                : "bananas"
+                : 0
             }
           />
         </li>
@@ -198,7 +198,6 @@ class Cities extends React.Component {
         <div />
         <CitySort />
         <br />
-        <CityModal />
         <br />
         <button type="button" className="button" onClick={this.sortByRank}>
           Sort by Rank

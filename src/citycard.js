@@ -1,11 +1,10 @@
 import React from "react";
-import CityModal from "./citymodal.js";
-import "./citycard.css";
+// import CityModal from "./citymodal.js";
 
 class CityCard extends React.Component {
   render() {
     return (
-      <div className="citycard">
+      <div className="cityCard">
         <p>
           <span>#</span>
           <span>{this.props.rank}</span>

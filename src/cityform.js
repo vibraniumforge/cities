@@ -56,7 +56,7 @@ class CityForm extends React.Component {
   render() {
     return (
       <div>
-        <form className="theForm">
+        <form className="theCityForm">
           <label>Rank:</label>
           <input
             type="text"
@@ -94,7 +94,7 @@ class CityForm extends React.Component {
             type="text"
             id="latitude"
             value={
-              this.state.formData.longitude.value
+              this.state.formData.latitude.value
                 ? this.state.formData.latitude.value.toPrecision(8)
                 : ""
             }

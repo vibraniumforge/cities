@@ -1,26 +1,10 @@
 import React from "react";
 
-class CitySort extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      radioValue: "rank"
-    };
-    this.onChange = this.onChange.bind(this);
-  }
-
-  onChange(e) {
-    console.log(e);
-    console.log(e.target.value);
-    this.setState({ radioValue: e.target.value });
-    console.log(this.state.radioValue);
-  }
-
+class CitySortRadio extends React.Component {
   render() {
     return (
       <div>
-        <form className="theForm">
+        <form className="theRadioForm">
           <label>
             Sort by:
             <br />
@@ -28,7 +12,7 @@ class CitySort extends React.Component {
               type="radio"
               value="rank"
               name="sortBy"
-              onChange={this.onChange}
+              onChange={this.props.changeRadioValue}
             />
             Population Rank
             <br />
@@ -36,7 +20,7 @@ class CitySort extends React.Component {
               type="radio"
               value="city"
               name="sortBy"
-              onChange={this.onChange}
+              onChange={this.props.changeRadioValue}
             />
             City Name
             <br />
@@ -44,7 +28,7 @@ class CitySort extends React.Component {
               type="radio"
               value="state"
               name="sortBy"
-              onChange={this.onChange}
+              onChange={this.props.changeRadioValue}
             />
             State Name
             <br />
@@ -52,7 +36,7 @@ class CitySort extends React.Component {
               type="radio"
               value="longitude"
               name="sortBy"
-              onChange={this.onChange}
+              onChange={this.props.changeRadioValue}
             />
             Longitude
             <br />
@@ -60,7 +44,7 @@ class CitySort extends React.Component {
               type="radio"
               value="lattitude"
               name="sortBy"
-              onChange={this.onChange}
+              onChange={this.props.changeRadioValue}
             />
             Lattitude
             <br />
@@ -68,15 +52,15 @@ class CitySort extends React.Component {
               type="radio"
               value="population"
               name="sortBy"
-              onChange={this.onChange}
+              onChange={this.props.changeRadioValue}
             />
             Population
             <br />
             <input
               type="radio"
-              value="growth "
+              value="growth"
               name="sortBy"
-              onChange={this.onChange}
+              onChange={this.props.changeRadioValue}
             />
             Growth
             <br />
@@ -87,4 +71,4 @@ class CitySort extends React.Component {
   }
 }
 
-export default CitySort;
+export default CitySortRadio;

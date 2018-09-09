@@ -1,9 +1,8 @@
 import React from "react";
 import axios from "axios";
 import CityForm from "./cityform.js";
-import CitySort from "./citysort.js";
+import CitySortRadio from "./citysortradio.js";
 import CityCard from "./citycard.js";
-import "./cities.css";
 
 const citiesUrl =
   "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
@@ -14,15 +13,19 @@ class Cities extends React.Component {
 
     this.state = {
       originalCitiesList: [],
-      sortedCitiesList: [],
       formData: [],
-      // sortBy: "populationRank",
       sortAscending: true,
-      showModal: false
+      showModal: false,
+      radioValue: "rank",
+      sortBy: "",
+      showCityForm: false
     };
+
     this.onSelect = this.onSelect.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.changeRadioValue = this.changeRadioValue.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.showCityForm = this.showCityForm.bind(this);
 
     this.sortAscending = this.sortAscending.bind(this);
     this.sortByRank = this.sortByRank.bind(this);
@@ -31,25 +34,21 @@ class Cities extends React.Component {
     this.sortByLatitude = this.sortByLatitude.bind(this);
     this.sortByLongitude = this.sortByLongitude.bind(this);
     this.sortByGrowth = this.sortByGrowth.bind(this);
+    this.sortChooser = this.sortChooser.bind(this);
   }
 
   componentDidMount() {
     axios.get(citiesUrl).then(data => {
       this.setState({
-        originalCitiesList: data.data,
-        sortedCitiesList: data.data
+        originalCitiesList: data.data
       });
     });
   }
 
   onSelect(item, event) {
     event.preventDefault();
+    this.showCityForm();
     this.setState({ formData: item });
-  }
-
-  onChange(e) {
-    this.setState({ sortBy: e.target.value });
-    this.sort(e);
   }
 
   toggleModal(e) {
@@ -57,108 +56,166 @@ class Cities extends React.Component {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  changeRadioValue(e) {
+    this.setState({ radioValue: e.target.value });
+  }
+
+  showCityForm() {
+    this.setState({ showCityForm: true });
+  }
+
   sortAscending() {
     this.setState({ sortAscending: !this.state.sortAscending });
   }
 
   sortByRank() {
-    let sortedList;
     if (this.state.sortAscending) {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        // if (a.state > b.state) return 1;
-        // else if (a.state < b.state) return -1;
-        // return 0;
-        return parseInt(a.rank, 10) > parseInt(b.rank, 10) ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (parseInt(a.rank, 10) > parseInt(b.rank, 10)) return 1;
+        else if (parseInt(a.rank, 10) < parseInt(b.rank, 10)) return -1;
+        return 0;
       });
     } else {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        // if (a.state > b.state) return -1;
-        // else if (a.state < b.state) return 1;
-        // return 0;
-        return parseInt(a.rank, 10) < parseInt(b.rank, 10) ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (parseInt(a.rank, 10) < parseInt(b.rank, 10)) return 1;
+        else if (parseInt(a.rank, 10) > parseInt(b.rank, 10)) return -1;
+        return 0;
       });
     }
-    this.setState({ originalCitiesList: sortedList });
   }
 
   sortByCity() {
-    let sortedList;
     if (this.state.sortAscending) {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.city > b.city ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.city > b.city) return 1;
+        else if (a.city < b.city) return -1;
+        return 0;
       });
     } else {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.city < b.city ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.city < b.city) return 1;
+        else if (a.city > b.city) return -1;
+        return 0;
       });
     }
-    this.setState({ originalCitiesList: sortedList });
   }
+  //   let sortedList;
+  //   if (this.state.sortAscending) {
+  //     sortedList = this.state.originalCitiesList.sort(function(a, b) {
+  //       return a.city > b.city ? 1 : -1;
+  //     });
+  //   } else {
+  //     sortedList = this.state.originalCitiesList.sort(function(a, b) {
+  //       return a.city < b.city ? 1 : -1;
+  //     });
+  //   }
+  //   this.setState({ originalCitiesList: sortedList });
+  // }
 
   sortByState() {
-    let sortedList;
     if (this.state.sortAscending) {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.state > b.state ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.state > b.state) return 1;
+        else if (a.state < b.state) return -1;
+        return 0;
       });
     } else {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.state < b.state ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.state < b.state) return 1;
+        else if (a.state > b.state) return -1;
+        return 0;
       });
     }
-    this.setState({ originalCitiesList: sortedList });
   }
 
   sortByLatitude() {
-    let sortedList;
     if (this.state.sortAscending) {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.latitude > b.latitude ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.latitude > b.latitude) return 1;
+        else if (a.latitude < b.latitude) return -1;
+        return 0;
       });
     } else {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.latitude < b.latitude ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.latitude < b.latitude) return 1;
+        else if (a.latitude > b.latitude) return -1;
+        return 0;
       });
     }
-    this.setState({ originalCitiesList: sortedList });
   }
 
   sortByLongitude() {
-    let sortedList;
     if (this.state.sortAscending) {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.longitude > b.longitude ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.longitude > b.longitude) return 1;
+        else if (a.longitude < b.longitude) return -1;
+        return 0;
       });
     } else {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return a.longitude < b.longitude ? 1 : -1;
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (a.longitude < b.longitude) return 1;
+        else if (a.longitude > b.longitude) return -1;
+        return 0;
       });
     }
-    this.setState({ originalCitiesList: sortedList });
   }
 
   sortByGrowth() {
-    let sortedList;
     if (this.state.sortAscending) {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return parseFloat(a.growth_from_2000_to_2013) >
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (
+          parseFloat(a.growth_from_2000_to_2013) >
           parseFloat(b.growth_from_2000_to_2013)
-          ? 1
-          : -1;
+        )
+          return 1;
+        else if (
+          parseFloat(a.growth_from_2000_to_2013) <
+          parseFloat(b.growth_from_2000_to_2013)
+        )
+          return -1;
+        return 0;
       });
     } else {
-      sortedList = this.state.originalCitiesList.sort(function(a, b) {
-        return parseFloat(a.growth_from_2000_to_2013) <
+      return this.state.originalCitiesList.slice().sort(function(a, b) {
+        if (
+          parseFloat(a.growth_from_2000_to_2013) <
           parseFloat(b.growth_from_2000_to_2013)
-          ? 1
-          : -1;
+        )
+          return 1;
+        else if (
+          parseFloat(a.growth_from_2000_to_2013) >
+          parseFloat(b.growth_from_2000_to_2013)
+        )
+          return -1;
+        return 0;
       });
     }
-    this.setState({ originalCitiesList: sortedList });
+  }
+
+  handleClick(e) {
+    this.setState({ sortBy: e.target.name });
+  }
+
+  sortChooser() {
+    if (this.state.sortBy === "rank") {
+      return this.sortByRank();
+    } else if (this.state.sortBy === "city") {
+      return this.sortByCity();
+    } else if (this.state.sortBy === "state") {
+      return this.sortByState();
+    } else if (this.state.sortBy === "latitude") {
+      return this.sortByLatitude();
+    } else if (this.state.sortBy === "longitude") {
+      return this.sortByLongitude();
+    } else if (this.state.sortBy === "growth") {
+      return this.sortByGrowth();
+    } else if (this.state.sortBy === "") {
+      return this.state.originalCitiesList;
+    }
   }
 
   render() {
-    const cities = this.state.originalCitiesList.map((city, cityIndex) => (
+    const cities = this.sortChooser().map((city, cityIndex) => (
       <ol
         className="ol"
         key={cityIndex}
@@ -175,7 +232,7 @@ class Cities extends React.Component {
             growth={
               city.growth_from_2000_to_2013
                 ? city.growth_from_2000_to_2013
-                : 0
+                : "N/A"
             }
           />
         </li>
@@ -184,37 +241,73 @@ class Cities extends React.Component {
 
     return (
       <div>
-        {/* <span role="img" aria-label="flag">
+        <span role="img" aria-label="Emoji: United States">
           {" "}
           🇺🇸
-        </span> */}
+        </span>
         <h1>Welcome to the top 1000 American Cities!</h1>
-        {/* <span role="img" aria-label="flag">
+        <span role="img" aria-label="Emoji: United States">
           🇺🇸
-        </span> */}
+        </span>
         <br />
-        <CityForm formData={this.state.formData} />
+        {this.state.showCityForm ? (
+          <CityForm formData={this.state.formData} />
+        ) : null}
+
         <br />
         <div />
-        <CitySort />
+        <CitySortRadio
+          radioValue={this.state.radioValue}
+          changeRadioValue={this.changeRadioValue}
+        />
         <br />
         <br />
-        <button type="button" className="button" onClick={this.sortByRank}>
+        <button
+          type="button"
+          className="button"
+          name="rank"
+          onClick={this.handleClick}
+        >
           Sort by Rank
         </button>
-        <button type="button" className="button" onClick={this.sortByCity}>
+        <button
+          type="button"
+          className="button"
+          name="city"
+          onClick={this.handleClick}
+        >
           Sort by City Name
         </button>
-        <button type="button" className="button" onClick={this.sortByState}>
+        <button
+          type="button"
+          className="button"
+          name="state"
+          onClick={this.handleClick}
+        >
           Sort by State Name
         </button>
-        <button type="button" className="button" onClick={this.sortByLatitude}>
+        <button
+          type="button"
+          className="button"
+          name="latitude"
+          onClick={this.handleClick}
+        >
           Sort by Latitude
         </button>
-        <button type="button" className="button" onClick={this.sortByLongitude}>
+        <button
+          type="button"
+          className="button"
+          name="longitude"
+          onClick={this.handleClick}
+        >
           Sort by Longitude
         </button>
-        <button type="button" className="button" onClick={this.sortByGrowth}>
+        <button
+          type="button"
+          className="button"
+          name="growth"
+          onClick={this.handleClick}
+        >
           Sort by Growth
         </button>
         <br />

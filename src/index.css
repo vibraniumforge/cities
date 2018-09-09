@@ -3,3 +3,55 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.App {
+  text-align: center;
+}
+
+button {
+  background-color: #3c3b6e;
+  color: #ffffff;
+  font-size: 24px;
+  border: 5px solid #b22234;
+  margin: 2px;
+}
+
+input {
+  background-color: white;
+  border: none;
+}
+
+ol {
+  display: inline-block;
+  list-style-type: none;
+}
+
+.cityCard {
+  background-color: #3c3b6e;
+  text-align: center;
+  list-style-type: none;
+  width: 50px;
+  border: 10px solid #b22234;
+  padding: 10px;
+  margin: 10px;
+  color: white;
+  width: 200px;
+  align-content: center;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.theCityForm {
+  font-size: 20px;
+}
+
+input {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.theRadioForm {
+  font-weight: bold;
+  text-align: right;
+  display: inline-block;
+}

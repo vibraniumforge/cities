@@ -5,6 +5,7 @@ class CitySortRadio extends React.Component {
     return (
       <div>
         <form className="theRadioForm">
+          <br />
           <label>
             Sort by:
             <br />
@@ -34,14 +35,6 @@ class CitySortRadio extends React.Component {
             <br />
             <input
               type="radio"
-              value="longitude"
-              name="sortBy"
-              onChange={this.props.changeRadioValue}
-            />
-            Longitude
-            <br />
-            <input
-              type="radio"
               value="lattitude"
               name="sortBy"
               onChange={this.props.changeRadioValue}
@@ -50,11 +43,11 @@ class CitySortRadio extends React.Component {
             <br />
             <input
               type="radio"
-              value="population"
+              value="longitude"
               name="sortBy"
               onChange={this.props.changeRadioValue}
             />
-            Population
+            Longitude
             <br />
             <input
               type="radio"
@@ -64,6 +57,10 @@ class CitySortRadio extends React.Component {
             />
             Growth
             <br />
+            <br />
+            <button type="button" onClick={this.props.changeRadioValue}>
+              Sort
+            </button>
           </label>
         </form>
       </div>

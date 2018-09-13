@@ -3,6 +3,7 @@ import axios from "axios";
 import CityForm from "./cityform.js";
 import CitySortRadio from "./citysortradio.js";
 import CityCard from "./citycard.js";
+import CityModal from "./citymodal.js";
 
 const citiesUrl =
   "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
@@ -16,15 +17,14 @@ class Cities extends React.Component {
       formData: [],
       sortAscending: true,
       showModal: false,
+      showCityForm: false,
       radioValue: "rank",
-      sortBy: "",
-      showCityForm: false
+      sortBy: "rank"
     };
 
     this.onSelect = this.onSelect.bind(this);
-    this.changeRadioValue = this.changeRadioValue.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
     this.showCityForm = this.showCityForm.bind(this);
 
     this.sortAscending = this.sortAscending.bind(this);
@@ -34,6 +34,10 @@ class Cities extends React.Component {
     this.sortByLatitude = this.sortByLatitude.bind(this);
     this.sortByLongitude = this.sortByLongitude.bind(this);
     this.sortByGrowth = this.sortByGrowth.bind(this);
+
+    this.changeRadioValue = this.changeRadioValue.bind(this);
+    this.radioSortChooser = this.radioSortChooser.bind(this);
+    this.handleSortByClick = this.handleSortByClick.bind(this);
     this.sortChooser = this.sortChooser.bind(this);
   }
 
@@ -51,13 +55,14 @@ class Cities extends React.Component {
     this.setState({ formData: item });
   }
 
-  toggleModal(e) {
-    e.preventDefault();
-    this.setState({ showModal: !this.state.showModal });
+  handleOpenModal() {
+    console.log("handleOpenModal fires");
+    this.setState({ showModal: true });
   }
 
-  changeRadioValue(e) {
-    this.setState({ radioValue: e.target.value });
+  handleCloseModal() {
+    console.log("handleCloseModal fires");
+    this.setState({ showModal: false });
   }
 
   showCityForm() {
@@ -66,6 +71,7 @@ class Cities extends React.Component {
 
   sortAscending() {
     this.setState({ sortAscending: !this.state.sortAscending });
+    this.sortChooser();
   }
 
   sortByRank() {
@@ -192,7 +198,32 @@ class Cities extends React.Component {
     }
   }
 
-  handleClick(e) {
+  changeRadioValue(e) {
+    console.log("changeRadioValue fires");
+    this.setState({ radioValue: e.target.value });
+    this.radioSortChooser();
+  }
+
+  radioSortChooser() {
+    console.log("radioSortChooser fires");
+    if (this.state.radioValue === "rank") {
+      return this.sortByRank();
+    } else if (this.state.radioValue === "city") {
+      return this.sortByCity();
+    } else if (this.state.radioValue === "state") {
+      return this.sortByState();
+    } else if (this.state.radioValue === "latitude") {
+      return this.sortByLatitude();
+    } else if (this.state.radioValue === "longitude") {
+      return this.sortByLongitude();
+    } else if (this.state.radioValue === "growth") {
+      return this.sortByGrowth();
+    } else if (this.state.radioValue === "") {
+      return this.state.originalCitiesList;
+    }
+  }
+
+  handleSortByClick(e) {
     this.setState({ sortBy: e.target.name });
   }
 
@@ -245,36 +276,48 @@ class Cities extends React.Component {
           {" "}
           🇺🇸
         </span>
-        <h1>Welcome to the top 1000 American Cities!</h1>
+        <h1>Welcome to the top 1000!</h1>
+        <h2>The top 1000 American cities by population size.</h2>
         <span role="img" aria-label="Emoji: United States">
           🇺🇸
         </span>
         <br />
+        <br />
         {this.state.showCityForm ? (
           <CityForm formData={this.state.formData} />
         ) : null}
-
         <br />
-        <div />
+        {this.state.showCityForm ? (
+          <button type="button" onClick={this.handleOpenModal}>
+            Open a Modal
+          </button>
+        ) : null}
+        <br />
         <CitySortRadio
-          radioValue={this.state.radioValue}
+          // radioValue={this.state.radioValue}
           changeRadioValue={this.changeRadioValue}
         />
         <br />
+        <CityModal
+          showModal={this.state.showModal}
+          open={this.handleOpenModal}
+          onRequestClose={this.handleCloseModal}
+          formData={this.state.formData}
+        />
         <br />
         <button
           type="button"
           className="button"
           name="rank"
-          onClick={this.handleClick}
+          onClick={this.handleSortByClick}
         >
-          Sort by Rank
+          Sort by Population Rank
         </button>
         <button
           type="button"
           className="button"
           name="city"
-          onClick={this.handleClick}
+          onClick={this.handleSortByClick}
         >
           Sort by City Name
         </button>
@@ -282,7 +325,7 @@ class Cities extends React.Component {
           type="button"
           className="button"
           name="state"
-          onClick={this.handleClick}
+          onClick={this.handleSortByClick}
         >
           Sort by State Name
         </button>
@@ -290,7 +333,7 @@ class Cities extends React.Component {
           type="button"
           className="button"
           name="latitude"
-          onClick={this.handleClick}
+          onClick={this.handleSortByClick}
         >
           Sort by Latitude
         </button>
@@ -298,7 +341,7 @@ class Cities extends React.Component {
           type="button"
           className="button"
           name="longitude"
-          onClick={this.handleClick}
+          onClick={this.handleSortByClick}
         >
           Sort by Longitude
         </button>
@@ -306,7 +349,7 @@ class Cities extends React.Component {
           type="button"
           className="button"
           name="growth"
-          onClick={this.handleClick}
+          onClick={this.handleSortByClick}
         >
           Sort by Growth
         </button>

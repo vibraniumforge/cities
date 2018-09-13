@@ -40,14 +40,14 @@ class CityForm extends React.Component {
       population: {
         value: initializedCity.population.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
       },
-      growth_from_2000_to_2013: {
-        value: initializedCity.growth_from_2000_to_2013
-      },
       latitude: {
         value: initializedCity.latitude
       },
       longitude: {
         value: initializedCity.longitude
+      },
+      growth_from_2000_to_2013: {
+        value: initializedCity.growth_from_2000_to_2013
       }
     };
     return formData;
@@ -61,6 +61,7 @@ class CityForm extends React.Component {
           <input
             type="text"
             id="rank"
+            className="formInput"
             value={this.state.formData.rank.value}
             disabled
           />
@@ -69,6 +70,7 @@ class CityForm extends React.Component {
           <input
             type="text"
             id="city"
+            className="formInput"
             value={this.state.formData.city.value}
             disabled
           />
@@ -77,6 +79,7 @@ class CityForm extends React.Component {
           <input
             type="text"
             id="state"
+            className="formInput"
             value={this.state.formData.state.value}
             disabled
           />
@@ -85,6 +88,7 @@ class CityForm extends React.Component {
           <input
             type="text"
             id="population"
+            className="formInput"
             value={this.state.formData.population.value}
             disabled
           />
@@ -93,6 +97,7 @@ class CityForm extends React.Component {
           <input
             type="text"
             id="latitude"
+            className="formInput"
             value={
               this.state.formData.latitude.value
                 ? this.state.formData.latitude.value.toPrecision(8)
@@ -105,6 +110,7 @@ class CityForm extends React.Component {
           <input
             type="text"
             id="longitude"
+            className="formInput"
             value={
               this.state.formData.longitude.value
                 ? this.state.formData.longitude.value.toPrecision(8)
@@ -117,6 +123,7 @@ class CityForm extends React.Component {
           <input
             type="text"
             id="growth"
+            className="formInput"
             value={this.state.formData.growth_from_2000_to_2013.value}
             disabled
           />

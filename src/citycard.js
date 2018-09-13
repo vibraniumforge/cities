@@ -1,5 +1,4 @@
 import React from "react";
-// import CityModal from "./citymodal.js";
 
 class CityCard extends React.Component {
   render() {
@@ -13,15 +12,17 @@ class CityCard extends React.Component {
           <br />
           <span>{this.props.state}</span>
           <br />
-          <span>{this.props.latitude},</span>
+          <span>Latitude: {this.props.latitude},</span>
           <br />
-          <span>{this.props.longitude}</span>
+          <span>Longitude: {this.props.longitude}</span>
           <br />
-          <span>{this.props.population}</span>
+          <span>Population: {this.props.population}</span>
           <br />
-          <span>{this.props.growth}</span>
+          <span>Growth: {this.props.growth}</span>
           <br />
-          <button>Modal</button>
+          {/* <button type="button" onClick={this.toggleModal}>
+            Modal
+          </button> */}
         </p>
       </div>
     );

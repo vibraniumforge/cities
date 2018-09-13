@@ -19,11 +19,21 @@ button {
 input {
   background-color: white;
   border: none;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
 }
 
 ol {
   display: inline-block;
   list-style-type: none;
+}
+
+.formInput {
+  background-color: white;
+  border: none;
+  width: 130px;
+  color: black;
 }
 
 .cityCard {
@@ -43,15 +53,24 @@ ol {
 
 .theCityForm {
   font-size: 20px;
-}
-
-input {
-  font-size: 20px;
-  font-weight: bold;
+  text-align: center;
+  align-content: center;
 }
 
 .theRadioForm {
   font-weight: bold;
-  text-align: right;
+  text-align: left;
   display: inline-block;
+}
+
+.modal {
+  height: 400px;
+  width: 400px;
+  background-color: #3c3b6e;
+  font-weight: bold;
+  font-size: 20px;
+  align-content: center;
+  color: white;
+  text-align: center;
+  border: 10px solid #b22234;
 }

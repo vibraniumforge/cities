@@ -22,6 +22,7 @@ input {
   font-size: 20px;
   font-weight: bold;
   text-align: left;
+  margin: 2px;
 }
 
 ol {
@@ -29,6 +30,9 @@ ol {
   list-style-type: none;
 }
 
+select {
+  margin: 2px;
+}
 .formInput {
   background-color: white;
   border: none;
@@ -63,6 +67,10 @@ ol {
   display: inline-block;
 }
 
+.theRadioForm button {
+  align-content: center;
+}
+
 .modal {
   height: 400px;
   width: 400px;
@@ -73,4 +81,9 @@ ol {
   color: white;
   text-align: center;
   border: 10px solid #b22234;
+}
+
+.searchBox {
+  border: solid 1px black;
+  font-weight: normal;
 }

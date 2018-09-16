@@ -20,9 +20,6 @@ class CityCard extends React.Component {
           <br />
           <span>Growth: {this.props.growth}</span>
           <br />
-          {/* <button type="button" onClick={this.toggleModal}>
-            Modal
-          </button> */}
         </p>
       </div>
     );

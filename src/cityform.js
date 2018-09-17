@@ -38,16 +38,19 @@ class CityForm extends React.Component {
         value: initializedCity.state
       },
       population: {
-        value: initializedCity.population.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        value: initializedCity.population
       },
       latitude: {
-        value: initializedCity.latitude
+        value: initializedCity.latitude.toPrecision(8)
       },
       longitude: {
-        value: initializedCity.longitude
+        value: initializedCity.longitude.toPrecision(8)
       },
       growth_from_2000_to_2013: {
-        value: initializedCity.growth_from_2000_to_2013
+        value: initializedCity.growth_from_2000_to_2013.replace(
+          /\B(?=(\d{3})+(?!\d))/g,
+          ","
+        )
       }
     };
     return formData;
@@ -100,7 +103,7 @@ class CityForm extends React.Component {
             className="formInput"
             value={
               this.state.formData.latitude.value
-                ? this.state.formData.latitude.value.toPrecision(8)
+                ? this.state.formData.latitude.value
                 : ""
             }
             disabled
@@ -113,7 +116,7 @@ class CityForm extends React.Component {
             className="formInput"
             value={
               this.state.formData.longitude.value
-                ? this.state.formData.longitude.value.toPrecision(8)
+                ? this.state.formData.longitude.value
                 : ""
             }
             disabled

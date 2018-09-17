@@ -1,10 +1,11 @@
 import React from "react";
 import axios from "axios";
 import CityForm from "./cityform.js";
-import CitySortRadio from "./citysortradio.js";
+// import CitySortRadio from "./citysortradio.js";
 import CityCard from "./citycard.js";
 import CityModal from "./citymodal.js";
 import CitySearch from "./citysearch.js";
+import CityCharts from "./citycharts.js";
 
 const citiesUrl =
   "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
@@ -21,9 +22,7 @@ class Cities extends React.Component {
       showCityForm: false,
       radioValue: "",
       sortBy: "",
-      searchForCityName: "",
-      searchForStateName: "",
-      searchForPopulationRank: ""
+      top1000CitiesTotalPop: ""
     };
 
     this.onSelect = this.onSelect.bind(this);
@@ -43,22 +42,8 @@ class Cities extends React.Component {
     this.radioSortChooser = this.radioSortChooser.bind(this);
     this.handleSortByClick = this.handleSortByClick.bind(this);
     this.sortChooser = this.sortChooser.bind(this);
-    this.handleSearchForCityNameChange = this.handleSearchForCityNameChange.bind(
-      this
-    );
-    this.searchForCityNameFx = this.searchForCityNameFx.bind(this);
-    this.handleSearchForStateNameChange = this.handleSearchForStateNameChange.bind(
-      this
-    );
-    this.searchForStateNameFx = this.searchForStateNameFx.bind(this);
-    this.handleSearchForPopulationRankChange = this.handleSearchForPopulationRankChange.bind(
-      this
-    );
-    this.searchForPopulationRankFx = this.searchForPopulationRankFx.bind(this);
 
     this.totalCitiesPop = this.totalCitiesPop.bind(this);
-    this.totalCitiesByState = this.totalCitiesByState.bind(this);
-    this.totalPopByState = this.totalPopByState.bind(this);
   }
 
   componentDidMount() {
@@ -70,64 +55,12 @@ class Cities extends React.Component {
   }
 
   totalCitiesPop() {
-    let sum = 0;
-    let allCitiesPop = [];
-    for (let i = 0; i < 1000; i++) {
-      allCitiesPop.push(
-        parseInt(this.state.originalCitiesList[i].population, 10)
-      );
-    }
-    sum = allCitiesPop.reduce((a, b) => {
-      return a + b;
-    });
-    console.log(
-      "The total population of the top 1000 cities is:",
-      sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    );
-  }
-
-  totalCitiesByState() {
-    let myArray = [];
-    for (let i = 0; i < this.state.originalCitiesList.length; i++) {
-      myArray.push(this.state.originalCitiesList[i].state);
-    }
-    let resultObject = [];
-    myArray.map(item => {
-      if (isNaN(resultObject[item])) {
-        resultObject[item] = 1;
-      } else {
-        resultObject[item] += 1;
-      }
-      return resultObject.sort(function(a, b) {
-        if (a > b) return 1;
-        else if (a < b) return -1;
-        return 0;
-      });
-    });
-    // console.log(resultObject);
-    console.log(resultObject);
-  }
-
-  totalPopByState() {
-    let myArr = [];
-    for (let i = 0; i < this.state.originalCitiesList.length; i++) {
-      myArr.push;
-      {
-        this.state.originalCitiesList[i].state,
-          this.state.originalCitiesList[i].population;
-      }
-    }
-    console.log(myArr);
-    let resultObject = {};
-    myArr.map(item => {
-      if (isNaN(resultObject[item])) {
-        resultObject[item] = this.state.originalCitiesList.population;
-      } else {
-        resultObject[item] += this.state.originalCitiesList.population;
-      }
-      return resultObject;
-    });
-    console.log(resultObject);
+    const reducer = (acc, currVal) => acc + parseInt(currVal.population, 10);
+    let sum = this.state.originalCitiesList
+      .reduce(reducer, 0)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    this.setState({ top1000CitiesTotalPop: sum });
   }
 
   onSelect(item, event) {
@@ -307,6 +240,7 @@ class Cities extends React.Component {
   }
 
   sortChooser() {
+    console.log("sortChooser fires");
     if (this.state.sortBy === "rank") {
       return this.sortByRank();
     } else if (this.state.sortBy === "city") {
@@ -324,83 +258,10 @@ class Cities extends React.Component {
     }
   }
 
-  handleSearchForCityNameChange(e) {
-    this.setState({ searchForCityName: e.target.value });
-  }
-
-  // searchForCityNameFx() {
-  //   let filteredCityList = this.state.originalCitiesList.filter(city => {
-  //     if (
-  //       this.state.originalCitiesList &&
-  //       city.city &&
-  //       city.city
-  //         .toLowerCase()
-  //         .includes(this.state.searchForCityName.toLowerCase())
-  //     ) {
-  //       return city;
-  //     }
-  //     return filteredCityList;
-  //   });
-  //   this.setState({ originalCitiesList: filteredCityList });
-  // }
-
-  searchForCityNameFx() {
-    return this.state.originalCitiesList.slice().filter(city => {
-      if (
-        this.state.originalCitiesList &&
-        city.city &&
-        city.city
-          .toLowerCase()
-          .includes(this.state.searchForCityName.toLowerCase())
-      ) {
-        return city;
-      }
-      return null;
-    });
-  }
-
-  handleSearchForStateNameChange(e) {
-    this.setState({ searchForStateName: e.target.value });
-  }
-
-  searchForStateNameFx() {
-    let filteredCityList = this.state.originalCitiesList.filter(city => {
-      if (
-        this.state.originalCitiesList &&
-        city.state &&
-        city.state
-          .toLowerCase()
-          .includes(this.state.searchForStateName.toLowerCase())
-      ) {
-        return city;
-      }
-      return filteredCityList;
-    });
-    this.setState({ originalCitiesList: filteredCityList });
-  }
-
-  handleSearchForPopulationRankChange(e) {
-    this.setState({ searchForPopulationRank: e.target.value });
-  }
-
-  searchForPopulationRankFx() {
-    let filteredSearchByPopulationRankResult = this.state.originalCitiesList.filter(
-      city => {
-        if (
-          this.state.originalCitiesList &&
-          this.state.searchForPopulationRank &&
-          city.rank.toString() === this.state.searchForPopulationRank
-        ) {
-          return city;
-        }
-        return filteredSearchByPopulationRankResult;
-      }
-    );
-    this.setState({ originalCitiesList: filteredSearchByPopulationRankResult });
-  }
-
   render() {
-    const cities = this.sortChooser().map((city, cityIndex) => (
+    console.log("render fires");
+    // const cities = this.sortChooser().map((city, cityIndex) => (
+    const cities = this.state.originalCitiesList.map((city, cityIndex) => (
       <ol
         className="ol"
         key={cityIndex}
@@ -427,7 +288,6 @@ class Cities extends React.Component {
     return (
       <div>
         <span role="img" aria-label="Emoji: United States">
-          {" "}
           🇺🇸
         </span>
         <h1>Welcome to the top 1000!</h1>
@@ -435,11 +295,11 @@ class Cities extends React.Component {
         <span role="img" aria-label="Emoji: United States">
           🇺🇸
         </span>
-        <hr />
+        {/* <hr />
         <CitySortRadio
           radioValue={this.state.radioValue}
           changeRadioValue={this.changeRadioValue}
-        />
+        /> */}
         <CityModal
           // open={this.handleOpenModal}
           showModal={this.state.showModal}
@@ -513,43 +373,52 @@ class Cities extends React.Component {
           onChange={this.sortAscending}
         />
         <hr />
+        <CitySearch
+          originalCitiesList={this.state.originalCitiesList}
+          // searchForPopulationRank={this.state.searchForPopulationRank}
+          // searchForCityName={this.state.searchForCityName}
+          // searchForStateName={this.state.searchForStateName}
+        />
+        <hr />
+        <button type="button" onClick={this.totalCitiesPop}>
+          Add all population of all top 1000 cities
+        </button>
+        <input
+          className="searchBox"
+          type="text"
+          id="top1000Total"
+          value={this.state.top1000CitiesTotalPop}
+          disabled
+        />
+        <br />
+        <button type="button" onClick={this.totalCitiesByState}>
+          Add all the population every top 1000 city in a certain a state
+        </button>
+        <br />
+        <button type="button" onClick={this.totalPopByState}>
+          Number of top 1000 cities in a state
+        </button>
+        <br />
+        <button type="button" onClick={this.totalPopByState}>
+          Total population of top 1000 cities in a state
+        </button>
+        <hr />
+        <br />
+        <CityCharts originalCitiesList={this.state.originalCitiesList} />
+        <hr />
         <br />
         {this.state.showCityForm ? (
           <CityForm formData={this.state.formData} />
         ) : (
-          <p>Click on a city card to populate this area.</p>
+          <button type="button">
+            Click on a city card below to populate this area.
+          </button>
         )}
         {this.state.showCityForm ? (
           <button type="button" onClick={this.handleOpenModal}>
             Open a in Modal
           </button>
         ) : null}
-        <hr />
-        <CitySearch
-          searchForCityName={this.state.searchForCityName}
-          handleSearchForCityNameChange={this.handleSearchForCityNameChange}
-          searchForCityNameFx={this.searchForCityNameFx}
-          searchForStateName={this.state.searchForStateName}
-          handleSearchForStateNameChange={this.handleSearchForStateNameChange}
-          searchForStateNameFx={this.searchForStateNameFx}
-          searchForPopulationRank={this.state.searchForPopulationRank}
-          handleSearchForPopulationRankChange={
-            this.handleSearchForPopulationRankChange
-          }
-          searchForPopulationRankFx={this.searchForPopulationRankFx}
-        />
-        <hr />
-        <button type="button" onClick={this.totalCitiesPop}>
-          Add all population of all states
-        </button>
-        <button type="button" onClick={this.totalCitiesByState}>
-          Add all the population of a state
-        </button>
-        <button type="button" onClick={this.totalPopByState}>
-          Number of top 1000 cities per state
-        </button>
-        <button type="button">Graph of population of all states</button>
-        <button type="button">Graph of total cities of all states</button>
         <hr />
         <div> {cities}</div>
       </div>

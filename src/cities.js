@@ -22,7 +22,10 @@ class Cities extends React.Component {
       showCityForm: false,
       radioValue: "",
       sortBy: "",
-      top1000CitiesTotalPop: ""
+      top1000CitiesTotalPop: "",
+      searchForCityName: "",
+      searchForStateName: "",
+      searchForPopulationRank: ""
     };
 
     this.onSelect = this.onSelect.bind(this);
@@ -30,6 +33,7 @@ class Cities extends React.Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.showCityForm = this.showCityForm.bind(this);
 
+    this.handleSortByClick = this.handleSortByClick.bind(this);
     this.sortAscending = this.sortAscending.bind(this);
     this.sortByRank = this.sortByRank.bind(this);
     this.sortByCity = this.sortByCity.bind(this);
@@ -40,10 +44,23 @@ class Cities extends React.Component {
 
     this.handleChangeRadioValue = this.handleChangeRadioValue.bind(this);
     this.radioSortChooser = this.radioSortChooser.bind(this);
-    this.handleSortByClick = this.handleSortByClick.bind(this);
+
     this.sortChooser = this.sortChooser.bind(this);
 
     this.totalCitiesPop = this.totalCitiesPop.bind(this);
+
+    this.handleSearchForPopulationRankChange = this.handleSearchForPopulationRankChange.bind(
+      this
+    );
+    this.searchForPopulationRankFx = this.searchForPopulationRankFx.bind(this);
+    this.handleSearchForCityNameChange = this.handleSearchForCityNameChange.bind(
+      this
+    );
+    this.searchForCityNameFx = this.searchForCityNameFx.bind(this);
+    this.handleSearchForStateNameChange = this.handleSearchForStateNameChange.bind(
+      this
+    );
+    this.searchForStateNameFx = this.searchForStateNameFx.bind(this);
   }
 
   componentDidMount() {
@@ -240,7 +257,6 @@ class Cities extends React.Component {
   }
 
   sortChooser() {
-    console.log("sortChooser fires");
     if (this.state.sortBy === "rank") {
       return this.sortByRank();
     } else if (this.state.sortBy === "city") {
@@ -258,10 +274,63 @@ class Cities extends React.Component {
     }
   }
 
+  handleSearchForPopulationRankChange(e) {
+    this.setState({ searchForPopulationRank: e.target.value });
+  }
+
+  searchForPopulationRankFx() {
+    return this.state.originalCitiesList.filter(element => {
+      return (
+        parseInt(element.rank, 10) ===
+        parseInt(this.state.searchForPopulationRank, 10)
+      );
+    });
+  }
+
+  handleSearchForCityNameChange(e) {
+    this.setState({ searchForCityName: e.target.value });
+  }
+
+  // searchForCityNameFx() {
+  //   let filteredCityList = this.state.originalCitiesList.filter(city => {
+  //     if (
+  //       this.state.originalCitiesList &&
+  //       city.city &&
+  //       city.city
+  //         .toLowerCase()
+  //         .includes(this.state.searchForCityName.toLowerCase())
+  //     ) {
+  //       return city;
+  //     }
+  //     return filteredCityList;
+  //   });
+  //   this.setState({ originalCitiesList: filteredCityList });
+  // }
+
+  searchForCityNameFx() {
+    // console.log(this.props.originalCitiesList);
+    return this.state.originalCitiesList.filter(element => {
+      return element.city
+        .toLowerCase()
+        .includes(this.state.searchForCityName.toLowerCase());
+    });
+  }
+
+  handleSearchForStateNameChange(e) {
+    this.setState({ searchForStateName: e.target.value });
+  }
+
+  searchForStateNameFx() {
+    return this.state.originalCitiesList.filter(element => {
+      return element.state
+        .toLowerCase()
+        .includes(this.state.searchForStateName.toLowerCase());
+    });
+  }
+
   render() {
-    console.log("render fires");
-    // const cities = this.sortChooser().map((city, cityIndex) => (
-    const cities = this.state.originalCitiesList.map((city, cityIndex) => (
+    const cities = this.sortChooser().map((city, cityIndex) => (
+      // const cities = this.state.originalCitiesList.map((city, cityIndex) => (
       <ol
         className="ol"
         key={cityIndex}
@@ -374,10 +443,18 @@ class Cities extends React.Component {
         />
         <hr />
         <CitySearch
-          originalCitiesList={this.state.originalCitiesList}
-          // searchForPopulationRank={this.state.searchForPopulationRank}
-          // searchForCityName={this.state.searchForCityName}
-          // searchForStateName={this.state.searchForStateName}
+          // originalCitiesList={this.state.originalCitiesList}
+          searchForPopulationRank={this.state.searchForPopulationRank}
+          handleSearchForPopulationRankChange={
+            this.handleSearchForPopulationRankChange
+          }
+          searchForPopulationRankFx={this.searchForPopulationRankFx}
+          searchForCityName={this.state.searchForCityName}
+          handleSearchForCityNameChange={this.handleSearchForCityNameChange}
+          searchForCityNameFx={this.searchForCityNameFx}
+          searchForStateName={this.state.searchForStateName}
+          handleSearchForStateNameChange={this.handleSearchForStateNameChange}
+          searchForStateNameFx={this.searchForStateNameFx}
         />
         <hr />
         <button type="button" onClick={this.totalCitiesPop}>

@@ -73,7 +73,6 @@ class CityCharts extends React.Component {
   }
 
   render() {
-    console.log(this.state.orderedTop1000Cities);
     // let orderedTop1000Cities = this.state.orderedTop1000Cities.map(item => {
     //   return [item.state, item.amount];
     // });

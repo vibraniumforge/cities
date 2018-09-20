@@ -5,7 +5,8 @@ class CitySearch extends React.Component {
     return (
       <div>
         <label>Search: </label>
-        {/* <input
+        <div>
+          {/* <input
           type="radio"
           value="greaterThan"
           name="searchByPopRank"
@@ -26,14 +27,20 @@ class CitySearch extends React.Component {
           onChange={this.props.changeRadioValue}
         />
         Equal to */}
-        <select>
+        </div>
+        <select
+          id="select1"
+          value={this.props.searchForPopulationRankBy}
+          onChange={this.props.handleSelectChange}
+        >
+          <option value="" />
+          <option value="equalTo">Equal To </option>
           <option value="greaterThan">Greater Than</option>
-          <option value="greaterThan">Less Than</option>
-          <option value="greaterThan">Equal To </option>
+          <option value="lessThan">Less Than</option>
         </select>
         <input
           className="searchBox"
-          type="text"
+          type="number"
           placeholder="Enter a number"
           id="searchForPopulationRank"
           value={this.props.searchForPopulationRank}

@@ -23,9 +23,10 @@ class Cities extends React.Component {
       radioValue: "",
       sortBy: "",
       top1000CitiesTotalPop: "",
+      searchForPopulationRank: "",
+      searchForPopulationRankBy: "",
       searchForCityName: "",
-      searchForStateName: "",
-      searchForPopulationRank: ""
+      searchForStateName: ""
     };
 
     this.onSelect = this.onSelect.bind(this);
@@ -45,9 +46,11 @@ class Cities extends React.Component {
     this.handleChangeRadioValue = this.handleChangeRadioValue.bind(this);
     this.radioSortChooser = this.radioSortChooser.bind(this);
 
-    this.sortChooser = this.sortChooser.bind(this);
+    this.displayChooser = this.displayChooser.bind(this);
 
     this.totalCitiesPop = this.totalCitiesPop.bind(this);
+
+    this.handleSelectChange = this.handleSelectChange.bind(this);
 
     this.handleSearchForPopulationRankChange = this.handleSearchForPopulationRankChange.bind(
       this
@@ -100,7 +103,11 @@ class Cities extends React.Component {
 
   sortAscending() {
     this.setState({ sortAscending: !this.state.sortAscending });
-    this.sortChooser();
+    this.displayChooser();
+  }
+
+  handleSortByClick(e) {
+    this.setState({ sortBy: e.target.name });
   }
 
   sortByRank() {
@@ -134,20 +141,6 @@ class Cities extends React.Component {
       });
     }
   }
-
-  // softAscending() {
-  //     let sortedList;
-  //     if (this.state.sortAscending) {
-  //       sortedList = this.state.originalCitiesList.sort(function(a, b) {
-  //         return a.city > b.city ? 1 : -1;
-  //       });
-  //     } else {
-  //       sortedList = this.state.originalCitiesList.sort(function(a, b) {
-  //         return a.city < b.city ? 1 : -1;
-  //       });
-  //     }
-  //     this.setState({ originalCitiesList: sortedList });
-  //   }
 
   sortByState() {
     if (this.state.sortAscending) {
@@ -252,26 +245,8 @@ class Cities extends React.Component {
     }
   }
 
-  handleSortByClick(e) {
-    this.setState({ sortBy: e.target.name });
-  }
-
-  sortChooser() {
-    if (this.state.sortBy === "rank") {
-      return this.sortByRank();
-    } else if (this.state.sortBy === "city") {
-      return this.sortByCity();
-    } else if (this.state.sortBy === "state") {
-      return this.sortByState();
-    } else if (this.state.sortBy === "latitude") {
-      return this.sortByLatitude();
-    } else if (this.state.sortBy === "longitude") {
-      return this.sortByLongitude();
-    } else if (this.state.sortBy === "growth") {
-      return this.sortByGrowth();
-    } else if (this.state.sortBy === "") {
-      return this.state.originalCitiesList;
-    }
+  handleSelectChange(e) {
+    this.setState({ searchForPopulationRankBy: e.target.value });
   }
 
   handleSearchForPopulationRankChange(e) {
@@ -279,36 +254,37 @@ class Cities extends React.Component {
   }
 
   searchForPopulationRankFx() {
-    return this.state.originalCitiesList.filter(element => {
-      return (
-        parseInt(element.rank, 10) ===
-        parseInt(this.state.searchForPopulationRank, 10)
-      );
-    });
+    if (this.state.searchForPopulationRankBy === "equalTo") {
+      return this.state.originalCitiesList.filter(element => {
+        return (
+          parseInt(element.rank, 10) ===
+          parseInt(this.state.searchForPopulationRank, 10)
+        );
+      });
+    } else if (this.state.searchForPopulationRankBy === "greaterThan") {
+      return this.state.originalCitiesList.filter(element => {
+        return (
+          parseInt(element.rank, 10) <
+          parseInt(this.state.searchForPopulationRank, 10)
+        );
+      });
+    } else if (this.state.searchForPopulationRankBy === "lessThan") {
+      return this.state.originalCitiesList.filter(element => {
+        return (
+          parseInt(element.rank, 10) >
+          parseInt(this.state.searchForPopulationRank, 10)
+        );
+      });
+    } else if (this.state.searchForPopulationRankBy === "") {
+      //do something
+    }
   }
 
   handleSearchForCityNameChange(e) {
     this.setState({ searchForCityName: e.target.value });
   }
 
-  // searchForCityNameFx() {
-  //   let filteredCityList = this.state.originalCitiesList.filter(city => {
-  //     if (
-  //       this.state.originalCitiesList &&
-  //       city.city &&
-  //       city.city
-  //         .toLowerCase()
-  //         .includes(this.state.searchForCityName.toLowerCase())
-  //     ) {
-  //       return city;
-  //     }
-  //     return filteredCityList;
-  //   });
-  //   this.setState({ originalCitiesList: filteredCityList });
-  // }
-
   searchForCityNameFx() {
-    // console.log(this.props.originalCitiesList);
     return this.state.originalCitiesList.filter(element => {
       return element.city
         .toLowerCase()
@@ -328,8 +304,37 @@ class Cities extends React.Component {
     });
   }
 
+  displayChooser() {
+    if (this.state.sortBy === "rank") {
+      return this.sortByRank();
+    } else if (this.state.sortBy === "city") {
+      return this.sortByCity();
+    } else if (this.state.sortBy === "state") {
+      return this.sortByState();
+    } else if (this.state.sortBy === "latitude") {
+      return this.sortByLatitude();
+    } else if (this.state.sortBy === "longitude") {
+      return this.sortByLongitude();
+    } else if (this.state.sortBy === "growth") {
+      return this.sortByGrowth();
+    } else if (this.state.searchForPopulationRank) {
+      return this.searchForPopulationRankFx();
+    } else if (this.state.searchForCityName) {
+      return this.searchForCityNameFx();
+    } else if (this.state.searchForStateName) {
+      return this.searchForStateNameFx();
+    } else if (
+      this.state.sortBy === "" &&
+      this.state.searchForPopulationRank === "" &&
+      this.state.searchForCityName === "" &&
+      this.state.searchForStateName === ""
+    ) {
+      return this.state.originalCitiesList;
+    }
+  }
+
   render() {
-    const cities = this.sortChooser().map((city, cityIndex) => (
+    const cities = this.displayChooser().map((city, cityIndex) => (
       // const cities = this.state.originalCitiesList.map((city, cityIndex) => (
       <ol
         className="ol"
@@ -444,6 +449,8 @@ class Cities extends React.Component {
         <hr />
         <CitySearch
           // originalCitiesList={this.state.originalCitiesList}
+          searchForPopulationRankBy={this.state.searchForPopulationRankBy}
+          handleSelectChange={this.handleSelectChange}
           searchForPopulationRank={this.state.searchForPopulationRank}
           handleSearchForPopulationRankChange={
             this.handleSearchForPopulationRankChange
@@ -457,34 +464,36 @@ class Cities extends React.Component {
           searchForStateNameFx={this.searchForStateNameFx}
         />
         <hr />
-        <button type="button" onClick={this.totalCitiesPop}>
-          Add all population of all top 1000 cities
-        </button>
-        <input
-          className="searchBox"
-          type="text"
-          id="top1000Total"
-          value={this.state.top1000CitiesTotalPop}
-          disabled
-        />
-        <br />
-        <button type="button" onClick={this.totalCitiesByState}>
-          Add all the population every top 1000 city in a certain a state
-        </button>
-        <br />
-        <button type="button" onClick={this.totalPopByState}>
-          Number of top 1000 cities in a state
-        </button>
-        <br />
-        <button type="button" onClick={this.totalPopByState}>
-          Total population of top 1000 cities in a state
-        </button>
+        {/* <div id="math">
+          <button type="button" onClick={this.totalCitiesPop}>
+            Add all population of all top 1000 cities
+          </button>
+          <input
+            className="searchBox"
+            type="text"
+            id="top1000Total"
+            value={this.state.top1000CitiesTotalPop}
+            disabled
+          />
+          <br />
+          <button type="button" onClick={this.totalCitiesByState}>
+            Add all the population every top 1000 city in a certain a state
+          </button>
+          <br />
+          <button type="button" onClick={this.totalPopByState}>
+            Number of top 1000 cities in a state
+          </button>
+          <br />
+          <button type="button" onClick={this.totalPopByState}>
+            Total population of top 1000 cities in a state
+          </button>
+        </div> */}
         <hr />
         <br />
-        <CityCharts originalCitiesList={this.state.originalCitiesList} />
+        {/* <CityCharts originalCitiesList={this.state.originalCitiesList} /> */}
         <hr />
         <br />
-        {this.state.showCityForm ? (
+        {/* {this.state.showCityForm ? (
           <CityForm formData={this.state.formData} />
         ) : (
           <button type="button">
@@ -496,7 +505,7 @@ class Cities extends React.Component {
             Open a in Modal
           </button>
         ) : null}
-        <hr />
+        <hr /> */}
         <div> {cities}</div>
       </div>
     );

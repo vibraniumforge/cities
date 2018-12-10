@@ -1,14 +1,16 @@
 import React from "react";
 import axios from "axios";
 import CityForm from "./cityform.js";
-// import CitySortRadio from "./citysortradio.js";
+import CitySortButtons from "./citysortbuttons.js";
+import CitySortRadio from "./citysortradio.js";
 import CityCard from "./citycard.js";
 import CityModal from "./citymodal.js";
 import CitySearch from "./citysearch.js";
 import CityCharts from "./citycharts.js";
 
 const citiesUrl =
-  "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
+  "https://gist.githubusercontent.com" +
+  "/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
 
 class Cities extends React.Component {
   constructor(props) {
@@ -24,15 +26,17 @@ class Cities extends React.Component {
       sortBy: "",
       top1000CitiesTotalPop: "",
       searchForPopulationRank: "",
-      searchForPopulationRankBy: "",
+      searchForPopulationRankBy: "equalTo",
       searchForCityName: "",
-      searchForStateName: ""
+      searchForStateName: "",
+      totalCitiesByState: ""
     };
 
     this.onSelect = this.onSelect.bind(this);
+    this.showCityForm = this.showCityForm.bind(this);
+
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.showCityForm = this.showCityForm.bind(this);
 
     this.handleSortByClick = this.handleSortByClick.bind(this);
     this.sortAscending = this.sortAscending.bind(this);
@@ -64,6 +68,9 @@ class Cities extends React.Component {
       this
     );
     this.searchForStateNameFx = this.searchForStateNameFx.bind(this);
+
+    this.totalCitiesByState = this.totalCitiesByState.bind(this);
+    this.totalPopByState = this.totalPopByState.bind(this);
   }
 
   componentDidMount() {
@@ -78,9 +85,62 @@ class Cities extends React.Component {
     const reducer = (acc, currVal) => acc + parseInt(currVal.population, 10);
     let sum = this.state.originalCitiesList
       .reduce(reducer, 0)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      // .toString()
+      // .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      .toLocaleString();
     this.setState({ top1000CitiesTotalPop: sum });
+  }
+
+  totalCitiesByState() {
+    let myArray = [];
+    for (let i = 0; i < this.state.originalCitiesList.length; i++) {
+      myArray.push(this.state.originalCitiesList[i].state);
+    }
+    let resultObject = [];
+    myArray.map(item => {
+      if (isNaN(resultObject[item])) {
+        resultObject[item] = 1;
+      } else {
+        resultObject[item] += 1;
+      }
+      return resultObject.sort(function(a, b) {
+        if (a > b) return 1;
+        else if (a < b) return -1;
+        return 0;
+      });
+    });
+    console.log("resultObject=", resultObject);
+    console.log("resultObject[0]=", resultObject[0]);
+    console.log("typeof resultObject=", typeof resultObject);
+    let result = Object.keys(resultObject).map(function(key) {
+      return [Number(key, resultObject[key])];
+    });
+    console.log("resultObject=", resultObject);
+    console.log("typeof resultObject=", typeof resultObject);
+    console.log("result=", result);
+    console.log("typeof result=", typeof result);
+    this.setState({ totalCitiesByState: result });
+  }
+
+  totalPopByState() {
+    let myArr = [];
+    for (let i = 0; i < this.state.originalCitiesList.length; i++) {
+      myArr.push([
+        this.state.originalCitiesList[i].state,
+        this.state.originalCitiesList[i].population
+      ]);
+      console.log(myArr);
+      let resultObject = [];
+      myArr.map(item => {
+        if (isNaN(resultObject[item])) {
+          resultObject[item] = this.state.originalCitiesList.population;
+        } else {
+          resultObject[item] += this.state.originalCitiesList.population;
+        }
+        return resultObject;
+      });
+      // console.log(resultObject);
+    }
   }
 
   onSelect(item, event) {
@@ -89,16 +149,16 @@ class Cities extends React.Component {
     this.setState({ formData: item });
   }
 
+  showCityForm() {
+    this.setState({ showCityForm: !this.state.showCityForm });
+  }
+
   handleOpenModal() {
     this.setState({ showModal: true });
   }
 
   handleCloseModal() {
     this.setState({ showModal: false });
-  }
-
-  showCityForm() {
-    this.setState({ showCityForm: true });
   }
 
   sortAscending() {
@@ -276,7 +336,7 @@ class Cities extends React.Component {
         );
       });
     } else if (this.state.searchForPopulationRankBy === "") {
-      //do something
+      return this.state.originalCitiesList;
     }
   }
 
@@ -335,7 +395,6 @@ class Cities extends React.Component {
 
   render() {
     const cities = this.displayChooser().map((city, cityIndex) => (
-      // const cities = this.state.originalCitiesList.map((city, cityIndex) => (
       <ol
         className="ol"
         key={cityIndex}
@@ -369,11 +428,13 @@ class Cities extends React.Component {
         <span role="img" aria-label="Emoji: United States">
           🇺🇸
         </span>
-        {/* <hr />
-        <CitySortRadio
-          radioValue={this.state.radioValue}
-          changeRadioValue={this.changeRadioValue}
-        /> */}
+        <hr />
+        <div className="hidden">
+          <CitySortRadio
+            radioValue={this.state.radioValue}
+            changeRadioValue={this.changeRadioValue}
+          />
+        </div>
         <CityModal
           // open={this.handleOpenModal}
           showModal={this.state.showModal}
@@ -381,90 +442,15 @@ class Cities extends React.Component {
           formData={this.state.formData}
         />
         <hr />
-        <button
-          type="button"
-          className="button"
-          name="rank"
-          onClick={this.handleSortByClick}
-        >
-          Sort by Population Rank
-        </button>
-        <button
-          type="button"
-          className="button"
-          name="city"
-          onClick={this.handleSortByClick}
-        >
-          Sort by City Name
-        </button>
-        <button
-          type="button"
-          className="button"
-          name="state"
-          onClick={this.handleSortByClick}
-        >
-          Sort by State Name
-        </button>
-        <button
-          type="button"
-          className="button"
-          name="latitude"
-          onClick={this.handleSortByClick}
-        >
-          Sort by Latitude
-        </button>
-        <button
-          type="button"
-          className="button"
-          name="longitude"
-          onClick={this.handleSortByClick}
-        >
-          Sort by Longitude
-        </button>
-        <button
-          type="button"
-          className="button"
-          name="growth"
-          onClick={this.handleSortByClick}
-        >
-          Sort by Growth
-        </button>
-        <br />
-        <br />
-        <label htmlFor="radio">Sort Ascending</label>
-        <input
-          type="checkbox"
-          checked={this.state.sortAscending}
-          name="sortAscending"
-          onChange={this.sortAscending}
-        />
-        <br />
-        <label htmlFor="radio">Sort Descending</label>
-        <input
-          type="checkbox"
-          checked={!this.state.sortAscending}
-          name="sortDescending"
-          onChange={this.sortAscending}
-        />
+        <div className="hidden">
+          <CitySortButtons
+            sortAscendingState={this.state.sortAscending}
+            sortAscendingFx={this.sortAscending}
+            handleSortByClick={this.handleSortByClick}
+          />
+        </div>
         <hr />
-        <CitySearch
-          // originalCitiesList={this.state.originalCitiesList}
-          searchForPopulationRankBy={this.state.searchForPopulationRankBy}
-          handleSelectChange={this.handleSelectChange}
-          searchForPopulationRank={this.state.searchForPopulationRank}
-          handleSearchForPopulationRankChange={
-            this.handleSearchForPopulationRankChange
-          }
-          searchForPopulationRankFx={this.searchForPopulationRankFx}
-          searchForCityName={this.state.searchForCityName}
-          handleSearchForCityNameChange={this.handleSearchForCityNameChange}
-          searchForCityNameFx={this.searchForCityNameFx}
-          searchForStateName={this.state.searchForStateName}
-          handleSearchForStateNameChange={this.handleSearchForStateNameChange}
-          searchForStateNameFx={this.searchForStateNameFx}
-        />
-        <hr />
-        {/* <div id="math">
+        <div id="math">
           <button type="button" onClick={this.totalCitiesPop}>
             Add all population of all top 1000 cities
           </button>
@@ -473,39 +459,60 @@ class Cities extends React.Component {
             type="text"
             id="top1000Total"
             value={this.state.top1000CitiesTotalPop}
-            disabled
           />
           <br />
           <button type="button" onClick={this.totalCitiesByState}>
-            Add all the population every top 1000 city in a certain a state
-          </button>
-          <br />
-          <button type="button" onClick={this.totalPopByState}>
             Number of top 1000 cities in a state
           </button>
           <br />
           <button type="button" onClick={this.totalPopByState}>
-            Total population of top 1000 cities in a state
+            The population of every top 1000 city in a state
           </button>
-        </div> */}
+          <br />
+        </div>
         <hr />
         <br />
-        {/* <CityCharts originalCitiesList={this.state.originalCitiesList} /> */}
+        <CityCharts totalCitiesByState={this.state.totalCitiesByState} />
+        <hr />
+        <div className="hidden">
+          <CitySearch
+            searchForPopulationRankBy={this.state.searchForPopulationRankBy}
+            handleSelectChange={this.handleSelectChange}
+            searchForPopulationRank={this.state.searchForPopulationRank}
+            handleSearchForPopulationRankChange={
+              this.handleSearchForPopulationRankChange
+            }
+            searchForPopulationRankFx={this.searchForPopulationRankFx}
+            searchForCityName={this.state.searchForCityName}
+            handleSearchForCityNameChange={this.handleSearchForCityNameChange}
+            searchForCityNameFx={this.searchForCityNameFx}
+            searchForStateName={this.state.searchForStateName}
+            handleSearchForStateNameChange={this.handleSearchForStateNameChange}
+            searchForStateNameFx={this.searchForStateNameFx}
+          />
+        </div>
         <hr />
         <br />
-        {/* {this.state.showCityForm ? (
-          <CityForm formData={this.state.formData} />
-        ) : (
-          <button type="button">
-            Click on a city card below to populate this area.
-          </button>
-        )}
-        {this.state.showCityForm ? (
-          <button type="button" onClick={this.handleOpenModal}>
-            Open a in Modal
-          </button>
-        ) : null}
-        <hr /> */}
+        <div className="hidden">
+          {this.state.showCityForm ? (
+            <CityForm formData={this.state.formData} />
+          ) : (
+            <button type="button">
+              Click on a city card below to populate this area.
+            </button>
+          )}
+          {this.state.showCityForm ? (
+            <div>
+              <button type="button" onClick={this.handleOpenModal}>
+                Open a in Modal
+              </button>{" "}
+              <button type="button" onClick={this.showCityForm}>
+                Close this area
+              </button>
+            </div>
+          ) : null}
+        </div>
+        <hr />
         <div> {cities}</div>
       </div>
     );

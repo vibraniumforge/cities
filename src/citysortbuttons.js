@@ -8,7 +8,7 @@ class CitySortButtons extends React.Component {
           type="button"
           className="button"
           name="rank"
-          onClick={this.handleSortByClick}
+          onClick={this.props.handleSortByClick}
         >
           Sort by Population Rank
         </button>
@@ -16,7 +16,7 @@ class CitySortButtons extends React.Component {
           type="button"
           className="button"
           name="city"
-          onClick={this.handleSortByClick}
+          onClick={this.props.handleSortByClick}
         >
           Sort by City Name
         </button>
@@ -24,7 +24,7 @@ class CitySortButtons extends React.Component {
           type="button"
           className="button"
           name="state"
-          onClick={this.handleSortByClick}
+          onClick={this.props.handleSortByClick}
         >
           Sort by State Name
         </button>
@@ -32,7 +32,7 @@ class CitySortButtons extends React.Component {
           type="button"
           className="button"
           name="latitude"
-          onClick={this.handleSortByClick}
+          onClick={this.props.handleSortByClick}
         >
           Sort by Latitude
         </button>
@@ -40,7 +40,7 @@ class CitySortButtons extends React.Component {
           type="button"
           className="button"
           name="longitude"
-          onClick={this.handleSortByClick}
+          onClick={this.props.handleSortByClick}
         >
           Sort by Longitude
         </button>
@@ -48,7 +48,7 @@ class CitySortButtons extends React.Component {
           type="button"
           className="button"
           name="growth"
-          onClick={this.handleSortByClick}
+          onClick={this.props.handleSortByClick}
         >
           Sort by Growth
         </button>
@@ -57,17 +57,17 @@ class CitySortButtons extends React.Component {
         <label htmlFor="radio">Sort Ascending</label>
         <input
           type="checkbox"
-          checked={this.state.sortAscending}
+          checked={this.props.sortAscendingState}
           name="sortAscending"
-          onChange={this.sortAscending}
+          onChange={this.props.sortAscendingFx}
         />
         <br />
         <label htmlFor="radio">Sort Descending</label>
         <input
           type="checkbox"
-          checked={!this.state.sortAscending}
+          checked={!this.props.sortAscendingState}
           name="sortDescending"
-          onChange={this.sortAscending}
+          onChange={this.props.sortAscendingFx}
         />
         <hr />
       </div>

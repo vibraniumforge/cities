@@ -4,7 +4,7 @@ class CitySearch extends React.Component {
   render() {
     return (
       <div>
-        <label>Search: </label>
+
         <div>
           {/* <input
           type="radio"

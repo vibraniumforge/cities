@@ -38,7 +38,7 @@ class CityForm extends React.Component {
         value: initializedCity.state
       },
       population: {
-        value: initializedCity.population
+        value: initializedCity.population.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
       },
       latitude: {
         value: initializedCity.latitude.toPrecision(8)
@@ -47,10 +47,7 @@ class CityForm extends React.Component {
         value: initializedCity.longitude.toPrecision(8)
       },
       growth_from_2000_to_2013: {
-        value: initializedCity.growth_from_2000_to_2013.replace(
-          /\B(?=(\d{3})+(?!\d))/g,
-          ","
-        )
+        value: initializedCity.growth_from_2000_to_2013
       }
     };
     return formData;

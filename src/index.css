@@ -87,3 +87,7 @@ select {
   border: solid 1px black;
   font-weight: normal;
 }
+
+.hidden {
+  display: none;
+}
